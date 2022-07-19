@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Погода</title>
+    <style>
+
+        body{
+            font-family: 'Roboto', sans-serif;
+        }
+
+        a{
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+        }
+
+        p{
+            margin: 0;
+            padding: 0;
+        }
+
+        ul{
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header__flex{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header__search{
+            margin-right: 20px;
+        }
+
+        button{
+            background: inherit;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 10px;
+            border: 1px solid grey;
+        }
+
+        input{
+            border: 1px green solid;
+            padding: 6px;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        input:hover, input:focus{
+            font-weight: bold;
+            border: 1px solid #AFEEEE;
+            background: #AFEEEE;
+        }
+
+        .header{
+            margin-bottom: 20px;
+        }
+
+        .section__item{
+           background-color: #87CEEB;
+           position: relative;
+           width: 45%;
+           border: 1px solid gray;
+           border-radius: 20px;
+           padding: 10px;
+           margin-bottom: 20px;
+        }
+
+        .section__item-details{
+            margin-bottom: 20px;
+        }
+
+        .container{
+            max-width: 724px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+        }
+
+        .title{
+            text-align: center;
+        }
+
+        .btn__delete{
+            background: #BC8F8F;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+        .section__list{
+            display: flex;
+            flex-wrap:wrap;
+            justify-content: space-between;
+        }
+
+        .btn__delete:hover{
+            background:#DC143C;
+        }
+
+        .btn__info:hover{
+            background: #00FA9A;
+        }
+
+        .btn__info{
+            background: #9CEE90;
+        }
+
+        .container__bg{
+            background-image: url('https://androidnik.ru/wp-content/uploads/2017/04/chto-takoe-oblako-v-smartfone-i-kak-im-polzovatsya1.png');
+        }
+
+        .details__item:not(:last-child){
+            margin-bottom: 4px;
+        }
+
+        .help{
+            font-weight: bold;
+            font-size: 8px;
+            margin-left: 33.6%;
+        }
+    </style>
+</head>
+<body class="container container__bg">
+    <header class="header">
+       <h1 class="title">Погода</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="header__flex">
+                <div class="header__search">
+                    {{ form.name }}
+                </div>
+                <div class="search__btn btn">
+                    <button type="submit" class="btn__info">Поиск</button>
+                </div>
+            </div>
+            {% if message%}
+            <div class="help"> {{ message }} </div>
+            {% endif %}
+        </form>
+    </header>
+
+    <section class="section">
+        <div class="section__container">
+            <ul class="section__list">
+                {% for data in data %}
+                <li class="section__item">
+                    <picture>
+                        <img src="http://openweathermap.org/img/w/{{ data.icon }}.png" alt="img">
+                    </picture>
+                    <div class="section__item-details details">
+                        <p class="details__item">Город: {{ data.city }}</p>
+                        <p class="details__item">Cтрана: {{ data.country_code }}</p>
+                        <p class="details__item">Температура: {{ data.temperature }}°C</p>
+                        <p class="details__item">Ощущается как: {{ data.feels_like}}°C</p>
+                        <p class="details__item">Описание: {{ data.description }}</p>
+                        <p class="details__item">Влажность: {{ data.humidity }} % </p>
+                        <p class="details__item">Давление: {{ data.pressure }}</p>
+                        <div class="section__item-btn btn">
+                            <a href="{% url 'delete' pk=data.pk %}">
+                                <button class="btn__delete">Удалить</button>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+</body>
+
+</html>
